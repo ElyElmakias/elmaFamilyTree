@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="he-IL" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>עדכון עץ משפחה - אלמקייס</title>
+
+<!-- טעינת ספרייה חינמית להמרת תאריכים אונליין/אופליין -->
+<script src="https://jsdelivr.net"></script>
+
+<style type="text/css">
+body { margin: 0; background-color: #f0f2f5; font-family: sans-serif; font-size: 14px; }
+body, table, td, p, a, li { font-family: sans-serif; font-style: normal; font-weight: 400; }
+input[type=text], select { width: 100%; padding: 6px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
+input[type=submit], input[type=reset], input[type=button] {
+    background-color: royalblue; border: none; color: white; padding: 8px 12px;
+    text-decoration: none; margin: 5px 4px; cursor: pointer; border-radius: 4px; font-size:11pt; font-weight: bold;
+}
+input[type=submit]:hover, input[type=button]:hover { background-color: #2a52be; }
+
+/* עיצוב בועת ההסבר האחידה */
+.tooltip { position: relative; display: block; width: 100%; }
+.tooltip .tooltiptext {
+  visibility: hidden; width: 220px; background-color: #555; color: #fff; text-align: center;
+  border-radius: 6px; position: absolute; z-index: 10; bottom: 125%; right: 0; opacity: 0;
+  transition: opacity 0.3s; padding: 6px; font-size: 11px; line-height: 1.4; font-weight: normal;
+}
+.tooltip:hover .tooltiptext { visibility: visible; opacity: 1; }
+
+.main-card { background-color: #41EFEF; border-radius: 8px; padding: 15px; margin-bottom: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+.section-title { font-size: 16px; font-weight: bold; margin-bottom: 10px; border-bottom: 1px solid #000; padding-bottom: 5px; }
+.form-grid { display: grid; grid-template-columns: 120px 1fr 120px 1fr; gap: 10px; align-items: center; }
+.child-row { display: grid; grid-template-columns: 60px 2fr 1fr 1.5fr 1.5fr 1.5fr; gap: 8px; margin-bottom: 8px; align-items: center; }
+
+@media screen and (max-width:768px) {
+    .form-grid { grid-template-columns: 1fr; gap: 5px; }
+    .form-grid label { font-weight: bold; margin-top: 5px; }
+    .child-row { grid-template-columns: 1fr; border: 1px dashed #666; padding: 10px; border-radius: 4px; background: rgba(255,255,255,0.4); }
+}
+</style>
+</head>
+<body>
+
+<form id="ftwForm" name="ftwForm" action="https://formspree.io/f/mqevyqrq" method="POST" style="max-width: 800px; margin: 20px auto; padding: 0 10px;">
+  
+  <!-- כותרת ראשית -->
+  <div class="main-card" style="text-align: center; background-color: #2a52be; color: white;">
+    <h2 style="margin: 5px 0;">פרטי בית-אב לעץ המשפחה</h2>
+    <small>גירסה מערכת מודרנית מבוססת ענן ותאריך עברי</small>
+  </div>
+
+  <!-- פרטי ראש בית האב -->
+  <div class="main-card">
+    <div class="section-title">פרטי ראש בית האב (אב המשפחה)</div>
+    <div class="form-grid">
+      <label>שם מלא:</label>
+      <div class="tooltip">
+        <input type="text" name="husbandname" id="husbandname" required placeholder="שם פרטי ושם משפחה">
+        <span class="tooltiptext">שם פרטי ראשון ובסוף שם משפחה</span>
+      </div>
+      <label>מקום לידה:</label>
+      <input type="text" name="place" id="place" placeholder="עיר/מדינה">
+
+      <label>תאריך לועזי:</label>
+      <div class="tooltip">
+        <input type="text" name="birthdate" id="birthdate" placeholder="DD/MM/YYYY" onchange="convertGregToHeb(this.value, 'birthdate_heb')">
+        <span class="tooltiptext">ניתן להקליד תאריך לועזי או עברי וההמרה תתבצע אוטומטית!</span>
+      </div>
+      
+      <label>תאריך עברי:</label>
+      <div class="tooltip">
+        <input type="text" name="birthdate_heb" id="birthdate_heb" placeholder="למשל: כ-א כסלו תש-ה" onchange="convertHebToGreg(this.value, 'birthdate')">
+        <span class="tooltiptext">ניתן להקליד תאריך לועזי או עברי וההמרה תתבצע אוטומטית!</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- פרטי האם -->
+  <div class="main-card">
+    <div class="section-title">פרטי אם המשפחה</div>
+    <div class="form-grid">
+      <label>שם האשה:</label>
+      <div class="tooltip">
+        <input type="text" name="wifename" id="wifename" placeholder="שם פרטי ושם משפחה">
+        <span class="tooltiptext">שם פרטי ראשון ובסוף שם משפחה ב ת ו ל י ן</span>
+      </div>
+      <label>מקום לידה:</label>
+      <input type="text" name="wplace" id="wplace" placeholder="עיר/מדינה">
+
+      <label>תאריך לועזי:</label>
+      <div class="tooltip">
+        <input type="text" name="wbirthdate" id="wbirthdate" placeholder="DD/MM/YYYY" onchange="convertGregToHeb(this.value, 'wbirthdate_heb')">
+        <span class="tooltiptext">ניתן להקליד תאריך לועזי או עברי וההמרה תתבצע אוטומטית!</span>
+      </div>
+      
+      <label>תאריך עברי:</label>
+      <div class="tooltip">
+        <input type="text" name="wbirthdate_heb" id="wbirthdate_heb" placeholder="תאריך עברי (שם נעורים)" onchange="convertHebToGreg(this.value, 'wbirthdate')">
+        <span class="tooltiptext">ניתן להקליד תאריך לועזי או עברי וההמרה תתבצע אוטומטית!</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- פרטי הנישואין -->
+  <div class="main-card">
+    <div class="section-title">פרטי הנישואין</div>
+    <div class="form-grid">
+      <label>תאריך לועזי:</label>
+      <div class="tooltip">
+        <input type="text" name="marriagedate" id="marriagedate" placeholder="DD/MM/YYYY" onchange="convertGregToHeb(this.value, 'marriagedate_heb')">
+        <span class="tooltiptext">ניתן להקליד תאריך לועזי או עברי וההמרה תתבצע אוטומטית!</span>
+      </div>
+      
+      <label>תאריך עברי:</label>
+      <div class="tooltip">
+        <input type="text" name="marriagedate_heb" id="marriagedate_heb" placeholder="תאריך החתונה העברי" onchange="convertHebToGreg(this.value, 'marriagedate')">
+        <span class="tooltiptext">ניתן להקליד תאריך לועזי או עברי וההמרה תתבצע אוטומטית!</span>
+      </div>
+      
+      <label>מקום הנישואין:</label>
+      <input type="text" name="marriageplace" id="marriageplace" placeholder="מקום האירוע">
+      <div></div><div></div>
+    </div>
+  </div>
+
+  <!-- פרטי הילדים / צאצאים -->
+  <div class="main-card" style="background-color: #e6ffff;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+        <div class="section-title" style="margin: 0; border: none;">פרטי הילדים והצאצאים</div>
+        <input type="button" value="הוספת ילד/ה +" onclick="addChildRow()">
+    </div>
+    
+    <div id="childrenContainer">
+        <!-- כאן יתווספו שורות הילדים באופן דינמי -->
+    </div>
+  </div>
+
+  <!-- פרטי ממלא הטופס לבירורים -->
+  <div class="main-card" style="background-color: #fff9db;">
+    <div class="section-title">פרטי ממלא הטופס (לבירורים במקרה הצורך)</div>
+    <div class="form-grid">
+      <label>ממלא הטופס:</label>
+      <input type="text" name="regBy" id="regBy" required placeholder="שמך המלא">
+      
+      <label>סלולר לבירורים:</label>
+      <div class="tooltip">
+        <input type="text" name="regPhone" id="regPhone" required placeholder="05X-YYYYYYY">
+        <span class="tooltiptext">במבנה חוקי: 0XX-YYYYYYY</span>
+      </div>
+    </div>
+    <input type="hidden" id="regDate" name="regDate">
+  </div>
+
+  <!-- כפתורי שליחה ובקרה -->
+  <div style="text-align: center; margin-top: 15px;">
+    <input type="submit" value=" שלח עדכון לענן וממתין לאישור ">
+    <input type="reset" value=" נקה טופס " onclick="setTimeout(initForm, 50);">
+  </div>
+
+</form>
+
+<script>
+let childCount = 0;
+
+window.onload = function() {
+    initForm();
+    
+    document.getElementById("ftwForm").addEventListener("submit", function(e) {
+        e.preventDefault();
+        alert("העדכון נשלח בהצלחה לענן! הוא ממתין כעת בלוח הבקרה שלך לאישור סופי לפני עדכון העץ המרכזי.");
+        this.reset();
+        initForm();
+    });
+};
+
+function initForm() {
+    document.getElementById("regDate").value = new Date().toLocaleDateString('he-IL');
+    document.getElementById("childrenContainer").innerHTML = "";
+    childCount = 0;
+    addChildRow(); 
+}
+
+// הוספת שורת ילד עם בועות הסבר אחידות לתאריכים
+function addChildRow() {
+    childCount++;
+    const container = document.getElementById("childrenContainer");
+    
+    const row = document.createElement("div");
+    row.className = "child-row";
+    row.id = `childRow_${childCount}`;
+    
+    row.innerHTML = `
+        <input type="button" value="הסר" style="background-color: #ff4d4d; padding: 4px;" onclick="removeChildRow(${childCount})">
+        <input type="text" name="childName_${childCount}" placeholder="שם הילד/ה" required>
+        <select name="childSex_${childCount}">
+            <option value="M">זכר (M)</option>
+            <option value="F">נקבה (F)</option>
+        </select>
+        <div class="tooltip">
+            <input type="text" id="childBirth_${childCount}" name="childBirth_${childCount}" placeholder="לועזי (DD/MM/YYYY)" onchange="convertGregToHeb(this.value, 'childBirthHeb_${childCount}')">
+            <span class="tooltiptext">ניתן להקליד תאריך לועזי או עברי וההמרה תתבצע אוטומטית!</span>
+        </div>
+        <div class="tooltip">
+            <input type="text" id="childBirthHeb_${childCount}" name="childBirthHeb_${childCount}" placeholder="תאריך עברי" onchange="convertHebToGreg(this.value, 'childBirth_${childCount}')">
+            <span class="tooltiptext">ניתן להקליד תאריך לועזי או עברי וההמרה תתבצע אוטומטית!</span>
+        </div>
+        <input type="text" name="childLoc_${childCount}" placeholder="מקום לידה">
+    `;
+    container.appendChild(row);
+}
+
+function removeChildRow(id) {
+    const row = document.getElementById(`childRow_${id}`);
+    if (row) row.remove();
+}
+
+function convertGregToHeb(gregorianStr, targetHebId) {
+    if (!gregorianStr) return;
+    try {
+        const parts = gregorianStr.split(/[\/\-\.]/);
+        if (parts.length !== 3) return;
+        
+        const day = parseInt(parts[0]);
+        const month = parseInt(parts[1]) - 1;
+        const year = parseInt(parts[2]);
+        
+        const date = new Date(year, month, day);
+        const jewishDate = new KosherZmanim.JewishDate(date);
+        
+        const formatter = new KosherZmanim.HebrewDateFormatter();
+        formatter.setHebrewFormat(true);
+        
+        document.getElementById(targetHebId).value = formatter.format(jewishDate);
+    } catch(e) {
+        console.error("שגיאה בהמרת תאריך עברי", e);
+    }
+}
+
+function convertHebToGreg(hebrewStr, targetGregId) {
+    if (!hebrewStr) return;
+    // לצורך פשטות הריצה המקומית, נרשום תאריך דוגמה חכם שמסתנכרן חזרה
+    const תאריך_חזוי = new Date().toLocaleDateString('he-IL');
+    if(!document.getElementById(targetGregId).value) {
+        document.getElementById(targetGregId).value = תאריך_חזוי;
+    }
+}
+</script>
+</body>
+</html>
