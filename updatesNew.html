@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="he-IL" dir="rtl">כםרצ
+<html lang="he-IL" dir="rtl">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -41,12 +41,12 @@ input[type=submit]:hover, input[type=button]:hover { background-color: #2a52be; 
 </head>
 <body>
 
-<form id="ftwForm" name="ftwForm" action="https://api.sheetmonkey.io/form/41Uwfwd8DfnrK6D7gzmv7J" method="POST" style="max-width: 800px; margin: 20px auto; padding: 0 10px;">
+<form id="ftwForm" name="ftwForm" action="https://api.sheetmonkey.io/form/41Uwfwd8DfnrK6D7gzmv7J" method="POST"  accept-charset="UTF-8" style="max-width: 800px; margin: 20px auto; padding: 0 10px;">
   
   <!-- כותרת ראשית -->
   <div class="main-card" style="text-align: center; background-color: #2a52be; color: white;">
     <h2 style="margin: 5px 0;">פרטי בית-אב לעץ המשפחה</h2>
-    <small>גירסה מערכת מודרנית מבוססת ענן ותאריך עברי</small>
+    <small>גירסה מערכת (2.0) מודרנית מבוססת ענן ותאריך עברי</small>
   </div>
 
   <!-- פרטי ראש בית האב -->
@@ -153,7 +153,7 @@ input[type=submit]:hover, input[type=button]:hover { background-color: #2a52be; 
 
   <!-- כפתורי שליחה ובקרה -->
   <div style="text-align: center; margin-top: 15px;">
-    <input type="submit" value=" שלח עדכון לענן וממתין לאישור ">
+    <input type="submit" value=" שלח עדכון לענן והמתן לאישור ">
     <input type="reset" value=" נקה טופס " onclick="setTimeout(initForm, 50);">
   </div>
 
@@ -164,9 +164,12 @@ let childCount = 0;
 
 window.onload = function() {
     initForm();
-    
-    document.getElementById("ftwForm").addEventListener("submit", function(e) {
+    const form = document.getElementById('myForm');
+
+    form.addEventListener("submit", function(e) {
         e.preventDefault();
+	// form.submit(); // This bypasses native HTML validation
+	form.requestSubmit(); // Do not bypasses native HTML validation
         alert("העדכון נשלח בהצלחה לענן! הוא ממתין כעת בלוח הבקרה שלך לאישור סופי לפני עדכון העץ המרכזי.");
         this.reset();
         initForm();
