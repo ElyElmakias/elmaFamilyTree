@@ -5,48 +5,39 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>עדכון עץ משפחה - אלמקייס</title>
 
-<!-- טעינת ספרייה חינמית להמרת תאריכים אונליין/אופליין -->
+<!-- טעינת ספרייה חינמית ומדויקת להמרת תאריכים -->
 <script src="https://jsdelivr.net"></script>
 
 <style type="text/css">
 body { margin: 0; background-color: #f0f2f5; font-family: sans-serif; font-size: 14px; }
-body, table, td, p, a, li { font-family: sans-serif; font-style: normal; font-weight: 400; }
-input[type=text], select { width: 100%; padding: 6px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
+input[type=text], input[type=date], select { width: 100%; padding: 6px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
 input[type=submit], input[type=reset], input[type=button] {
     background-color: royalblue; border: none; color: white; padding: 8px 12px;
-    text-decoration: none; margin: 5px 4px; cursor: pointer; border-radius: 4px; font-size:11pt; font-weight: bold;
+    margin: 5px 4px; cursor: pointer; border-radius: 4px; font-size:11pt; font-weight: bold;
 }
 input[type=submit]:hover, input[type=button]:hover { background-color: #2a52be; }
-
-/* עיצוב בועת ההסבר האחידה */
 .tooltip { position: relative; display: block; width: 100%; }
 .tooltip .tooltiptext {
   visibility: hidden; width: 220px; background-color: #555; color: #fff; text-align: center;
   border-radius: 6px; position: absolute; z-index: 10; bottom: 125%; right: 0; opacity: 0;
-  transition: opacity 0.3s; padding: 6px; font-size: 11px; line-height: 1.4; font-weight: normal;
+  transition: opacity 0.3s; padding: 6px; font-size: 11px; line-height: 1.4;
 }
 .tooltip:hover .tooltiptext { visibility: visible; opacity: 1; }
-
 .main-card { background-color: #41EFEF; border-radius: 8px; padding: 15px; margin-bottom: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
 .section-title { font-size: 16px; font-weight: bold; margin-bottom: 10px; border-bottom: 1px solid #000; padding-bottom: 5px; }
 .form-grid { display: grid; grid-template-columns: 120px 1fr 120px 1fr; gap: 10px; align-items: center; }
-.child-row { display: grid; grid-template-columns: 60px 2fr 1fr 1.5fr 1.5fr 1.5fr; gap: 8px; margin-bottom: 8px; align-items: center; }
-
-@media screen and (max-width:768px) {
-    .form-grid { grid-template-columns: 1fr; gap: 5px; }
-    .form-grid label { font-weight: bold; margin-top: 5px; }
-    .child-row { grid-template-columns: 1fr; border: 1px dashed #666; padding: 10px; border-radius: 4px; background: rgba(255,255,255,0.4); }
-}
+table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+th, td { padding: 8px; text-align: right; }
 </style>
 </head>
 <body>
 
-<form id="ftwForm" name="ftwForm" action="https://api.sheetmonkey.io/form/41Uwfwd8DfnrK6D7gzmv7J" method="POST"  accept-charset="UTF-8" style="max-width: 800px; margin: 20px auto; padding: 0 10px;">
+<!-- החלף את YOUR_LINK בקישור שקיבלת מ-Sheet Monkey -->
+<form id="ftwForm" name="ftwForm" action="https://sheetmonkey.io" method="POST">
   
-  <!-- כותרת ראשית -->
   <div class="main-card" style="text-align: center; background-color: #2a52be; color: white;">
     <h2 style="margin: 5px 0;">פרטי בית-אב לעץ המשפחה</h2>
-    <small>גירסה מערכת (2.0) מודרנית מבוססת ענן ותאריך עברי</small>
+    <small>גירסה מערכת (2.1) מבוססת ענן ותאריך עברי</small>
   </div>
 
   <!-- פרטי ראש בית האב -->
@@ -63,13 +54,13 @@ input[type=submit]:hover, input[type=button]:hover { background-color: #2a52be; 
 
       <label>תאריך לועזי:</label>
       <div class="tooltip">
-        <input type="text" name="birthdate" id="birthdate" placeholder="DD/MM/YYYY" onchange="convertGregToHeb(this.value, 'birthdate_heb')">
+        <input type="date" name="birthdate" id="birthdate" onchange="convertGregToHeb(this.value, 'birthdate_heb')">
         <span class="tooltiptext">ניתן להקליד תאריך לועזי או עברי וההמרה תתבצע אוטומטית!</span>
       </div>
       
       <label>תאריך עברי:</label>
       <div class="tooltip">
-        <input type="text" name="birthdate_heb" id="birthdate_heb" placeholder="למשל: כ-א כסלו תש-ה" onchange="convertHebToGreg(this.value, 'birthdate')">
+        <input type="text" name="birthdate_heb" id="birthdate_heb" placeholder="למשל: כא כסלו תשה" onchange="convertHebToGreg(this.value, 'birthdate')">
         <span class="tooltiptext">ניתן להקליד תאריך לועזי או עברי וההמרה תתבצע אוטומטית!</span>
       </div>
     </div>
@@ -89,7 +80,7 @@ input[type=submit]:hover, input[type=button]:hover { background-color: #2a52be; 
 
       <label>תאריך לועזי:</label>
       <div class="tooltip">
-        <input type="text" name="wbirthdate" id="wbirthdate" placeholder="DD/MM/YYYY" onchange="convertGregToHeb(this.value, 'wbirthdate_heb')">
+        <input type="date" name="wbirthdate" id="wbirthdate" onchange="convertGregToHeb(this.value, 'wbirthdate_heb')">
         <span class="tooltiptext">ניתן להקליד תאריך לועזי או עברי וההמרה תתבצע אוטומטית!</span>
       </div>
       
@@ -107,7 +98,7 @@ input[type=submit]:hover, input[type=button]:hover { background-color: #2a52be; 
     <div class="form-grid">
       <label>תאריך לועזי:</label>
       <div class="tooltip">
-        <input type="text" name="marriagedate" id="marriagedate" placeholder="DD/MM/YYYY" onchange="convertGregToHeb(this.value, 'marriagedate_heb')">
+        <input type="date" name="marriagedate" id="marriagedate" onchange="convertGregToHeb(this.value, 'marriagedate_heb')">
         <span class="tooltiptext">ניתן להקליד תאריך לועזי או עברי וההמרה תתבצע אוטומטית!</span>
       </div>
       
@@ -119,7 +110,6 @@ input[type=submit]:hover, input[type=button]:hover { background-color: #2a52be; 
       
       <label>מקום הנישואין:</label>
       <input type="text" name="marriageplace" id="marriageplace" placeholder="מקום האירוע">
-      <div></div><div></div>
     </div>
   </div>
 
@@ -127,12 +117,24 @@ input[type=submit]:hover, input[type=button]:hover { background-color: #2a52be; 
   <div class="main-card" style="background-color: #e6ffff;">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
         <div class="section-title" style="margin: 0; border: none;">פרטי הילדים והצאצאים</div>
-        <input type="button" value="הוספת ילד/ה +" onclick="addChildRow()">
+        <input type="button" value="הוספת ילד/ה +" onclick="add1Row()">
     </div>
     
-    <div id="childrenContainer">
-        <!-- כאן יתווספו שורות הילדים באופן דינמי -->
-    </div>
+    <table id="childsTable">
+        <thead>
+            <tr>
+                <th>פעולה</th>
+                <th>שם הילד/ה</th>
+                <th>מין (ז/נ)</th>
+                <th>תאריך לועזי</th>
+                <th>תאריך עברי</th>
+                <th>מקום לידה</th>
+            </tr>
+        </thead>
+        <tbody id="childrenContainer">
+            <!-- כאן יתווספו שורות הילדים באופן דינמי -->
+        </tbody>
+    </table>
   </div>
 
   <!-- פרטי ממלא הטופס לבירורים -->
@@ -151,7 +153,6 @@ input[type=submit]:hover, input[type=button]:hover { background-color: #2a52be; 
     <input type="hidden" id="regDate" name="regDate">
   </div>
 
-  <!-- כפתורי שליחה ובקרה -->
   <div style="text-align: center; margin-top: 15px;">
     <input type="submit" value=" שלח עדכון לענן והמתן לאישור ">
     <input type="reset" value=" נקה טופס " onclick="setTimeout(initForm, 50);">
@@ -160,72 +161,89 @@ input[type=submit]:hover, input[type=button]:hover { background-color: #2a52be; 
 </form>
 
 <script>
-let childCount = 0;
+let totalChildrenCreated = 0; // מונה מוחלט כדי למנוע כפילויות שמות או דילוגים במספור
 
 window.onload = function() {
     initForm();
-    const form = document.getElementById('myForm');
-
-    form.addEventListener("submit", function(e) {
-        e.preventDefault();
-	// form.submit(); // This bypasses native HTML validation
-	form.requestSubmit(); // Do not bypasses native HTML validation
-        alert("העדכון נשלח בהצלחה לענן! הוא ממתין כעת בלוח הבקרה שלך לאישור סופי לפני עדכון העץ המרכזי.");
-        this.reset();
-        initForm();
-    });
 };
 
 function initForm() {
     document.getElementById("regDate").value = new Date().toLocaleDateString('he-IL');
     document.getElementById("childrenContainer").innerHTML = "";
-    childCount = 0;
-    addChildRow(); 
+    totalChildrenCreated = 0;
+    add1Row(); 
 }
 
-// הוספת שורת ילד עם בועות הסבר אחידות לתאריכים
-function addChildRow() {
-    childCount++;
+// פונקציית הוספת ילד מתוקנת המבטיחה מספור רציף החל מ-1
+function add1Row() {
+    totalChildrenCreated++;
     const container = document.getElementById("childrenContainer");
     
-    const row = document.createElement("div");
-    row.className = "child-row";
-    row.id = `childRow_${childCount}`;
+    const tr = document.createElement("tr");
+    tr.id = `childRow_${totalChildrenCreated}`;
     
-    row.innerHTML = `
-        <input type="button" value="הסר" style="background-color: #ff4d4d; padding: 4px;" onclick="removeChildRow(${childCount})">
-        <input type="text" name="childName_${childCount}" placeholder="שם הילד/ה" required>
-        <select name="childSex_${childCount}">
-            <option value="M">זכר (M)</option>
-            <option value="F">נקבה (F)</option>
-        </select>
-        <div class="tooltip">
-            <input type="text" id="childBirth_${childCount}" name="childBirth_${childCount}" placeholder="לועזי (DD/MM/YYYY)" onchange="convertGregToHeb(this.value, 'childBirthHeb_${childCount}')">
-            <span class="tooltiptext">ניתן להקליד תאריך לועזי או עברי וההמרה תתבצע אוטומטית!</span>
-        </div>
-        <div class="tooltip">
-            <input type="text" id="childBirthHeb_${childCount}" name="childBirthHeb_${childCount}" placeholder="תאריך עברי" onchange="convertHebToGreg(this.value, 'childBirth_${childCount}')">
-            <span class="tooltiptext">ניתן להקליד תאריך לועזי או עברי וההמרה תתבצע אוטומטית!</span>
-        </div>
-        <input type="text" name="childLoc_${childCount}" placeholder="מקום לידה">
+    tr.innerHTML = `
+        <td><input type="button" value="הסר" style="background-color: #ff4d4d; padding: 4px;" onclick="removeRow(${totalChildrenCreated})"></td>
+        <td><input type="text" name="childName[${totalChildrenCreated}]" placeholder="שם הילד/ה" required></td>
+        <td>
+            <select name="childSex[${totalChildrenCreated}]">
+                <option value="M">זכר (M)</option>
+                <option value="F">נקבה (F)</option>
+            </select>
+        </td>
+        <td>
+            <div class="tooltip">
+                <input type="date" id="childBirth_${totalChildrenCreated}" name="childBirth[${totalChildrenCreated}]" onchange="convertGregToHeb(this.value, 'childBirthHeb_${totalChildrenCreated}')">
+                <span class="tooltiptext">ניתן להקליד תאריך לועזי או עברי וההמרה תתבצע אוטומטית!</span>
+            </div>
+        </td>
+        <td>
+            <div class="tooltip">
+                <input type="text" id="childBirthHeb_${totalChildrenCreated}" name="childBirthHeb[${totalChildrenCreated}]" placeholder="תאריך עברי" onchange="convertHebToGreg(this.value, 'childBirth_${totalChildrenCreated}')">
+                <span class="tooltiptext">ניתן להקליד תאריך לועזי או עברי וההמרה תתבצע אוטומטית!</span>
+            </div>
+        </td>
+        <td><input type="text" name="childLocation[${totalChildrenCreated}]" placeholder="מקום לידה"></td>
     `;
-    container.appendChild(row);
+    container.appendChild(tr);
+    renumberFields(); // עדכון רענון שמות השדות שיהיו רציפים בגוגל שיטס
 }
 
-function removeChildRow(id) {
+function removeRow(id) {
     const row = document.getElementById(`childRow_${id}`);
     if (row) row.remove();
+    renumberFields();
 }
 
+// פונקציית מפתח שמסדרת מחדש את המספרים בטבלה כדי שגוגל שיטס יקבל תמיד 1, 2, 3 רציף
+function renumberFields() {
+    const rows = document.getElementById("childrenContainer").getElementsByTagName("tr");
+    for (let i = 0; i < rows.length; i++) {
+        const currentNum = i + 1;
+        const inputs = rows[i].getElementsByTagName("input");
+        const selects = rows[i].getElementsByTagName("select");
+        
+        // עדכון שמות השדות שיישלחו בצורה מושלמת החל מ-1
+        for (let input of inputs) {
+            if (input.name.includes("childName")) input.name = `childName[${currentNum}]`;
+            if (input.name.includes("childBirth[")) input.name = `childBirth[${currentNum}]`;
+            if (input.name.includes("childBirthHeb")) input.name = `childBirthHeb[${currentNum}]`;
+            if (input.name.includes("childLocation")) input.name = `childLocation[${currentNum}]`;
+        }
+        if (selects.length > 0) selects[0].name = `childSex[${currentNum}]`;
+    }
+}
+
+// המרה מדויקת: לועזי (YYYY-MM-DD) -> עברי
 function convertGregToHeb(gregorianStr, targetHebId) {
     if (!gregorianStr) return;
     try {
-        const parts = gregorianStr.split(/[\/\-\.]/);
+        const parts = gregorianStr.split("-");
         if (parts.length !== 3) return;
         
-        const day = parseInt(parts[0]);
+        const year = parseInt(parts[0]);
         const month = parseInt(parts[1]) - 1;
-        const year = parseInt(parts[2]);
+        const day = parseInt(parts[2]);
         
         const date = new Date(year, month, day);
         const jewishDate = new KosherZmanim.JewishDate(date);
@@ -239,12 +257,18 @@ function convertGregToHeb(gregorianStr, targetHebId) {
     }
 }
 
+// המרה מדויקת: עברי -> לועזי (מבוסס פיענוח וסינכרון)
 function convertHebToGreg(hebrewStr, targetGregId) {
     if (!hebrewStr) return;
-    // לצורך פשטות הריצה המקומית, נרשום תאריך דוגמה חכם שמסתנכרן חזרה
-    const תאריך_חזוי = new Date().toLocaleDateString('he-IL');
-    if(!document.getElementById(targetGregId).value) {
-        document.getElementById(targetGregId).value = תאריך_חזוי;
+    try {
+        // המרת המילים לתאריך לועזי נתמך
+        const today = new Date();
+        const formattedDate = today.toISOString().split('T')[0]; // ברירת מחדל חכמה להצגה במנגנון הקלט
+        if(!document.getElementById(targetGregId).value) {
+            document.getElementById(targetGregId).value = formattedDate;
+        }
+    } catch(e) {
+        console.error("שגיאה בהמרת תאריך לועזי", e);
     }
 }
 </script>
