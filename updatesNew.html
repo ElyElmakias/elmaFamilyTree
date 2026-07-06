@@ -256,7 +256,7 @@ function renumberFields() {
 
 // פונקציית עזר חכמה להמרת מספרים לאותיות עבריות (גימטריה ליום ושנה)
 function numToHebrewLetters(num) {
-    if (num >= 5000) num -= 5000; // הורדת האלפים (למשל 5786 הופך ל-786)
+    if (num >= 5000) num -= 5000; // הורדת האלפים
     
     const singleLetters = ["", "א", "ב", "ג", "ד", "ה", "ו", "ז", "ח", "ט"];
     const tensLetters = ["", "י", "כ", "ל", "מ", "נ", "ס", "ע", "פ", "צ"];
@@ -264,45 +264,27 @@ function numToHebrewLetters(num) {
     
     let result = "";
     
-    // מאות
     while (num >= 400) { result += "ת"; num -= 400; }
     if (num >= 100) { result += hundredsLetters[Math.floor(num / 100)]; num %= 100; }
     
-    // טיפול מיוחד ב-ט"ו (15) ו-ט"ז (16) כדי למנוע שמות קדושים
     if (num === 15) return result + "טו";
     if (num === 16) return result + "טז";
     
-    // עשרות
     if (num >= 10) { result += tensLetters[Math.floor(num / 10)]; num %= 10; }
-    
-    // יחידות
     if (num >= 1) { result += singleLetters[num]; }
     
     return result;
 }
 
-// המרה מושלמת: לועזי -> עברי באותיות מלאות (למשל: יג חשוון תשעז)
+// המרה מדויקת ויציבה: לועזי -> עברי באותיות מלאות
 function convertGregToHeb(gregorianStr, targetHebId) {
     if (!gregorianStr) return;
     try {
-        const parts = gregorianStr.split(/[-/.]/);
-        if (parts.length !== 3) return;
-        
-        let year, month, day;
-        if (parts[0].length === 4) { // מבנה YYYY-MM-DD
-            year = parseInt(parts[0]);
-            month = parseInt(parts[1]) - 1;
-            day = parseInt(parts[2]);
-        } else { // מבנה DD/MM/YYYY
-            day = parseInt(parts[0]);
-            month = parseInt(parts[1]) - 1;
-            year = parseInt(parts[2]);
-        }
-        
-        const date = new Date(year, month, day);
+        // יצירת תאריך ישיר מהמחרוזת של הדפדפן ללא תלות בסימני פיסוק
+        const date = new Date(gregorianStr);
         if (isNaN(date.getTime())) return;
         
-        // שליפת נתוני לוח השנה העברי הגולמיים מהדפדפן
+        // שליפת נתוני לוח השנה העברי הגולמיים מהדפדפן באמצעות מנוע פנימי
         const formatter = new Intl.DateTimeFormat('he-IL-u-ca-hebrew', {
             year: 'numeric', month: 'long', day: 'numeric'
         });
@@ -312,28 +294,30 @@ function convertGregToHeb(gregorianStr, targetHebId) {
         let hebMonthStr = formattedParts.find(p => p.type === 'month').value;
         let hebYearNum = parseInt(formattedParts.find(p => p.type === 'year').value);
         
-        // המרת המספרים לאותיות עבריות באמצעות הפונקציה החדשה
+        // המרת המספרים לאותיות עבריות
         const hebDayLetters = numToHebrewLetters(hebDayNum);
         const hebYearLetters = numToHebrewLetters(hebYearNum);
         
-        // ניקוי סימני "ב-" מיותרים מהחודש אם קיימים (כמו "באלול" -> "אלול")
+        // ניקוי אות היחס ב- במידה וקיימת
         if (hebMonthStr.startsWith("ב")) {
             hebMonthStr = hebMonthStr.substring(1);
         }
         
-        // הרכבת המחרוזת הסופית באותיות נקיות ומסורתיות
         const finalHebrewDate = `${hebDayLetters} ${hebMonthStr} ${hebYearLetters}`;
-        
-        // הקרנה מיידית למסך ושמירה בשדה של גוגל שיטס
         document.getElementById(targetHebId).value = finalHebrewDate;
     } catch(e) {
         console.error("שגיאה בהמרת תאריך עברי", e);
     }
 }
 
-// המרה הפוכה: עברי -> לועזי
+// המרה הפוכה: עברי -> לועזי (מופעלת רק אם השדה הלועזי ריק כדי למנוע דריסת נתונים!)
 function convertHebToGreg(hebrewStr, targetGregId) {
     if (!hebrewStr) return;
+    
+    // הגנה קריטית: אם כבר קיים ערך בשדה הלועזי, לא נוגעים בו ולא דורסים אותו!
+    const targetInput = document.getElementById(targetGregId);
+    if (targetInput.value) return; 
+    
     try {
         const cleanStr = hebrewStr.replace(/["'`\-_]/g, " ").trim();
         const months = ["תשרי", "חשון", "כסלו", "טבת", "שבט", "אדר", "ניסן", "אייר", "סיון", "תמוז", "אב", "אלול"];
@@ -341,7 +325,9 @@ function convertHebToGreg(hebrewStr, targetGregId) {
         if (monthIndex === -1) monthIndex = 11;
 
         let yearEstimated = 1980;
+        // פיענוח בסיסי של השנה לטובת מילוי ראשוני אם השדה הלועזי היה ריק
         if (cleanStr.includes("תש") || cleanStr.includes("תר")) {
+            if (cleanStr.includes("תשט ו") || cleanStr.includes("תשטו")) yearEstimated = 1955;
             if (cleanStr.includes("תשי ג") || cleanStr.includes("תשיג")) yearEstimated = 1953;
             if (cleanStr.includes("תש ה") || cleanStr.includes("תשה")) yearEstimated = 1945;
             if (cleanStr.includes("תש פ") || cleanStr.includes("תשפ")) yearEstimated = 2020;
@@ -353,7 +339,7 @@ function convertHebToGreg(hebrewStr, targetGregId) {
         const mm = String(date.getMonth() + 1).padStart(2, '0');
         const dd = String(date.getDate()).padStart(2, '0');
 
-        document.getElementById(targetGregId).value = `${yyyy}-${mm}-${dd}`;
+        targetInput.value = `${yyyy}-${mm}-${dd}`;
     } catch(e) {
         console.error("שגיאה בהמרת תאריך לועזי", e);
     }
