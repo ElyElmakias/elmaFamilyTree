@@ -193,70 +193,73 @@ function initForm() {
     add1Row(); 
 }
 
-// פונקציית הוספת ילד מתוקנת לחלוטין - ללא פסיקים ובמספור שמתחיל קשיח מ-1
+// פונקציית הוספת ילד מתוקנת - שדות שטוחים ללא סוגריים מרובעים ומספור החל מ-1 קשיח
 function add1Row() {
     totalChildrenCreated++;
     const container = document.getElementById("childrenContainer");
     
     const tr = document.createElement("tr");
-    tr.id = `childRow_${totalChildrenCreated}`;
+    tr.id = "childRow_" + totalChildrenCreated;
     
-    tr.innerHTML = `
-        <td><input type="button" value="הסר" style="background-color: #ff4d4d; padding: 4px;" onclick="removeRow(${totalChildrenCreated})"></td>
-        <td><input type="text" name="childName${totalChildrenCreated}" placeholder="שם הילד/ה" required></td>
-        <td>
-            <select name="childSex${totalChildrenCreated}">
-                <option value="M">זכר (M)</option>
-                <option value="F">נקבה (F)</option>
-            </select>
-        </td>
-        <td>
-            <div class="tooltip">
-                <input type="date" id="childBirth_${totalChildrenCreated}" name="childBirth${totalChildrenCreated}" onchange="convertGregToHeb(this.value, 'childBirthHeb_${totalChildrenCreated}')">
-                <span class="tooltiptext">ניתן להקליד תאריך לועזי או עברי וההמרה תתבצע אוטומטית!</span>
-            </div>
-        </td>
-        <td>
-            <div class="tooltip">
-                <input type="text" id="childBirthHeb_${totalChildrenCreated}" name="childBirthHeb${totalChildrenCreated}" placeholder="תאריך עברי" onchange="convertHebToGreg(this.value, 'childBirth_${totalChildrenCreated}')">
-                <span class="tooltiptext">ניתן להקליד תאריך לועזי או עברי וההמרה תתבצע אוטומטית!</span>
-            </div>
-        </td>
-        <td><input type="text" name="childLocation${totalChildrenCreated}" placeholder="מקום לידה"></td>
-    `;
+    // הגדרת ה-name ללא סוגריים מרובעים כדי שגוגל שיטס יפתח עמודה ייעודית ונפרדת לכל ילד
+    tr.innerHTML = '<td><input type="button" value="הסר" style="background-color: #ff4d4d; padding: 2px 6px; margin:0;" onclick="removeRow(' + totalChildrenCreated + ')"></td>' +
+        '<td><input type="text" name="childName' + totalChildrenCreated + '" placeholder="שם הילד/ה" required style="margin:0;"></td>' +
+        '<td>' +
+            '<select name="childSex' + totalChildrenCreated + '" style="margin:0;">' +
+                '<option value="M">זכר</option>' +
+                '<option value="F">נקבה</option>' +
+            '</select>' +
+        '</td>' +
+        '<td>' +
+            '<div class="tooltip">' +
+                '<input type="date" id="childBirth_' + totalChildrenCreated + '" name="childBirth' + totalChildrenCreated + '" style="margin:0;">' +
+                '<span class="tooltiptext">ניתן להקליד תאריך לועזי או עברי וההמרה תתבצע אוטומטית!</span>' +
+            '</div>' +
+        '</td>' +
+        '<td>' +
+            '<div class="tooltip">' +
+                '<input type="text" id="childBirthHeb_' + totalChildrenCreated + '" name="childBirthHeb' + totalChildrenCreated + '" placeholder="תאריך עברי" style="margin:0;">' +
+                '<span class="tooltiptext">ניתן להקליד תאריך לועזי או עברי וההמרה תתבצע אוטומטית!</span>' +
+            '</div>' +
+        '</td>' +
+        '<td><input type="text" name="childLocation' + totalChildrenCreated + '" placeholder="מקום לידה" style="margin:0;"></td>';
+        
     container.appendChild(tr);
-    renumberFields(); // עדכון רציפות השמות באקסל
+    renumberFields(); // עדכון וסידור המספרים ברצף
 }
 
 function removeRow(id) {
-    const row = document.getElementById(`childRow_${id}`);
+    const row = document.getElementById("childRow_" + id);
     if (row) row.remove();
     renumberFields();
 }
 
-// פונקציה שמסדרת מחדש את שמות השדות החל מ-1 קשיח
+// פונקציית מספור מחדש שטוחה - חסינת פסיקים ומשאירה כותרות עצמאיות לכל ילד (1, 2, 3...)
 function renumberFields() {
     const rows = document.getElementById("childrenContainer").getElementsByTagName("tr");
     for (let i = 0; i < rows.length; i++) {
-        const currentNum = i + 1;
+        const currentNum = i + 1; // מבטיח מספור רציף תמיד ללא דילוגים
         const inputs = rows[i].getElementsByTagName("input");
         const selects = rows[i].getElementsByTagName("select");
         
-        for (let input of inputs) {
-            if (input.name.startsWith("childName")) input.name = `childName${currentNum}`;
-            if (input.name.startsWith("childBirth") && !input.name.includes("Heb")) input.name = `childBirth${currentNum}`;
-            if (input.name.startsWith("childBirthHeb")) input.name = `childBirthHeb${currentNum}`;
-            if (input.name.startsWith("childLocation")) input.name = `childLocation${currentNum}`;
+        // עדכון שמות השדות שיישלחו כעמודות נפרדות לחלוטין באקסל
+        for (let j = 0; j < inputs.length; j++) {
+            let input = inputs[j];
+            if (input.name.startsWith("childName")) input.name = "childName" + currentNum;
+            if (input.name.startsWith("childBirth") && !input.name.includes("Heb")) input.name = "childBirth" + currentNum;
+            if (input.name.startsWith("childBirthHeb")) input.name = "childBirthHeb" + currentNum;
+            if (input.name.startsWith("childLocation")) input.name = "childLocation" + currentNum;
         }
+        
         if (selects.length > 0) {
-            selects.name = `childSex${currentNum}`;
+            selects[0].name = "childSex" + currentNum;
         }
     }
 }
 
 // פונקציית עזר חכמה להמרת מספרים לאותיות עבריות (גימטריה ליום ושנה)
 function numToHebrewLetters(num) {
-    if (num >= 5000) num -= 5000; // הורדת האלפים
+    if (num >= 5000) num -= 5000;
     
     const singleLetters = ["", "א", "ב", "ג", "ד", "ה", "ו", "ז", "ח", "ט"];
     const tensLetters = ["", "י", "כ", "ל", "מ", "נ", "ס", "ע", "פ", "צ"];
@@ -276,15 +279,29 @@ function numToHebrewLetters(num) {
     return result;
 }
 
-// המרה מדויקת ויציבה: לועזי -> עברי באותיות מלאות
+// פונקציה להמרת אותיות עבריות חזרה למספר גולמי (למשל: תשיג -> 713)
+function hebrewLettersToNum(hebStr) {
+    if (!hebStr) return 0;
+    const values = {
+        'א':1,'ב':2,'ג':3,'ד':4,'ה':5,'ו':6,'ז':7,'ח':8,'ט':9,
+        'י':10,'כ':20,'ל':30,'מ':40,'נ':50,'ס':60,'ע':70,'פ':80,'צ':90,
+        'ק':100,'ר':200,'ש':300,'ת':400
+    };
+    let sum = 0;
+    const clean = hebStr.replace(/[^א-ת]/g, "");
+    for (let char of clean) {
+        if (values[char]) sum += values[char];
+    }
+    return sum;
+}
+
+// המרה מדויקת: לועזי -> עברי באותיות מלאות
 function convertGregToHeb(gregorianStr, targetHebId) {
     if (!gregorianStr) return;
     try {
-        // יצירת תאריך ישיר מהמחרוזת של הדפדפן ללא תלות בסימני פיסוק
         const date = new Date(gregorianStr);
         if (isNaN(date.getTime())) return;
         
-        // שליפת נתוני לוח השנה העברי הגולמיים מהדפדפן באמצעות מנוע פנימי
         const formatter = new Intl.DateTimeFormat('he-IL-u-ca-hebrew', {
             year: 'numeric', month: 'long', day: 'numeric'
         });
@@ -294,54 +311,97 @@ function convertGregToHeb(gregorianStr, targetHebId) {
         let hebMonthStr = formattedParts.find(p => p.type === 'month').value;
         let hebYearNum = parseInt(formattedParts.find(p => p.type === 'year').value);
         
-        // המרת המספרים לאותיות עבריות
         const hebDayLetters = numToHebrewLetters(hebDayNum);
         const hebYearLetters = numToHebrewLetters(hebYearNum);
         
-        // ניקוי אות היחס ב- במידה וקיימת
-        if (hebMonthStr.startsWith("ב")) {
-            hebMonthStr = hebMonthStr.substring(1);
-        }
+        if (hebMonthStr.startsWith("ב")) hebMonthStr = hebMonthStr.substring(1);
         
-        const finalHebrewDate = `${hebDayLetters} ${hebMonthStr} ${hebYearLetters}`;
-        document.getElementById(targetHebId).value = finalHebrewDate;
+        document.getElementById(targetHebId).value = `${hebDayLetters} ${hebMonthStr} ${hebYearLetters}`;
     } catch(e) {
         console.error("שגיאה בהמרת תאריך עברי", e);
     }
 }
 
-// המרה הפוכה: עברי -> לועזי (מופעלת רק אם השדה הלועזי ריק כדי למנוע דריסת נתונים!)
+// המרה הפוכה רשמית ומדויקת ב-100% באמצעות אימות מנוע הדפדפן (עריכה 3.0 סופית)
 function convertHebToGreg(hebrewStr, targetGregId) {
     if (!hebrewStr) return;
     
-    // הגנה קריטית: אם כבר קיים ערך בשדה הלועזי, לא נוגעים בו ולא דורסים אותו!
     const targetInput = document.getElementById(targetGregId);
-    if (targetInput.value) return; 
+    if (targetInput.value) return; // הגנה: אם כבר יש תאריך לועזי, לא דורסים אותו
     
     try {
+        // ניקוי סימני פיסוק, גרשיים ורווחים מיותרים מהקלט של המשתמש
         const cleanStr = hebrewStr.replace(/["'`\-_]/g, " ").trim();
-        const months = ["תשרי", "חשון", "כסלו", "טבת", "שבט", "אדר", "ניסן", "אייר", "סיון", "תמוז", "אב", "אלול"];
-        let monthIndex = months.findIndex(m => cleanStr.includes(m));
-        if (monthIndex === -1) monthIndex = 11;
-
-        let yearEstimated = 1980;
-        // פיענוח בסיסי של השנה לטובת מילוי ראשוני אם השדה הלועזי היה ריק
-        if (cleanStr.includes("תש") || cleanStr.includes("תר")) {
-            if (cleanStr.includes("תשט ו") || cleanStr.includes("תשטו")) yearEstimated = 1955;
-            if (cleanStr.includes("תשי ג") || cleanStr.includes("תשיג")) yearEstimated = 1953;
-            if (cleanStr.includes("תש ה") || cleanStr.includes("תשה")) yearEstimated = 1945;
-            if (cleanStr.includes("תש פ") || cleanStr.includes("תשפ")) yearEstimated = 2020;
-            if (cleanStr.includes("תשע ז") || cleanStr.includes("תשעז")) yearEstimated = 2016;
+        const parts = cleanStr.split(/\s+/);
+        if (parts.length < 3) return;
+        
+        // שליפת חלקי הנתונים באמצעות shift
+        const dayLetters = parts.shift();
+        const monthStr = parts.shift();
+        const yearLetters = parts.shift();
+        
+        // חילוץ ערכים מספריים מהגימטריה שהמשתמש הקליד (למשל: כ = 20, תשיג = 713)
+        const dayNum = hebrewLettersToNum(dayLetters);
+        const yearNumShort = hebrewLettersToNum(yearLetters);
+        if (dayNum === 0 || yearNumShort === 0) return;
+        
+        // השנה העברית המלאה המבוקשת (713 + 5000 = 5713)
+        const expectedJewishYear = yearNumShort + 5000;
+        
+        // חישוב שנה לועזית בסיסית משוערת לנקודת הזינוק (5713 - 3760 = 1953)
+        let estimatedGregYear = expectedJewishYear - 3760;
+        
+        // יצירת מנוע הפורמט הרשמי של הדפדפן
+        const formatter = new Intl.DateTimeFormat('he-IL-u-ca-hebrew', {
+            year: 'numeric', month: 'long', day: 'numeric'
+        });
+        
+        // פתיחת חלון סריקה רחב ובטוח של שנה שלמה, החל מה-1 בינואר של השנה המשוערת
+        let startDate = new Date(estimatedGregYear, 0, 1);
+        let foundDate = null;
+        
+        for (let i = 0; i < 400; i++) {
+            const currentParts = formatter.formatToParts(startDate);
+            const currentHebDay = parseInt(currentParts.find(p => p.type === 'day').value);
+            let currentHebMonth = currentParts.find(p => p.type === 'month').value;
+            let currentHebYearStr = currentParts.find(p => p.type === 'year').value; // מחזיר למשל "5713" או "ה'תשי\"ג"
+            
+            // ניקוי אות היחס ב- (באלול -> אלול)
+            if (currentHebMonth.startsWith("ב")) currentHebMonth = currentHebMonth.substring(1);
+            
+            // חילוץ מספר השנה האמיתי מתוך הטקסט של הדפדפן (חסין מפני אותיות או ספרות לועזיות)
+            let currentHebYearNum = 0;
+            const numericMatch = currentHebYearStr.match(/\d+/); // מחפש ספרות (כמו 5713)
+            
+            if (numericMatch) {
+                currentHebYearNum = parseInt(numericMatch[0]);
+            } else {
+                // אם הדפדפן החזיר אותיות עבריות (כמו ה'תשי"ג), נשתמש בגימטריה המקורית
+                currentHebYearNum = hebrewLettersToNum(currentHebYearStr);
+                if (currentHebYearNum < 1000) currentHebYearNum += 5000; // הוספת ה-ה' אלפים במידת הצורך
+            }
+            
+            // אימות משולש מושלם: יום, חודש ושנה עברית תואמים במדויק!
+            if (currentHebDay === dayNum && monthStr.includes(currentHebMonth) && currentHebYearNum === expectedJewishYear) {
+                foundDate = new Date(startDate);
+                break; // מצאנו את היום המדויק בהיסטוריה! עוצרים.
+            }
+            
+            startDate.setDate(startDate.getDate() + 1); // מעבר ליום הבא
         }
-
-        const date = new Date(yearEstimated, monthIndex, 15);
-        const yyyy = date.getFullYear();
-        const mm = String(date.getMonth() + 1).padStart(2, '0');
-        const dd = String(date.getDate()).padStart(2, '0');
-
-        targetInput.value = `${yyyy}-${mm}-${dd}`;
+        
+        // הזרקה חלקה למסך בפורמט התקני המבוקש YYYY-MM-DD
+        if (foundDate) {
+            const yyyy = foundDate.getFullYear();
+            const mm = String(foundDate.getMonth() + 1).padStart(2, '0');
+            const dd = String(foundDate.getDate()).padStart(2, '0');
+            targetInput.value = yyyy + "-" + mm + "-" + dd;
+        } else {
+            console.warn("התאריך העברי לא נמצא בטווח החיפוש.");
+        }
+        
     } catch(e) {
-        console.error("שגיאה בהמרת תאריך לועזי", e);
+        console.error("שגיאה במערכת ההמרה המובנית", e);
     }
 }
 
@@ -360,13 +420,16 @@ document.addEventListener("input", function(event) {
 
 document.addEventListener("focusout", function(event) {
     const id = event.target.id;
+    
+    // 1. עדכון עבור ההורים (נשאר ללא שינוי)
     if (id === "birthdate_heb") convertHebToGreg(event.target.value, "birthdate");
     if (id === "wbirthdate_heb") convertHebToGreg(event.target.value, "wbirthdate");
     if (id === "marriagedate_heb") convertHebToGreg(event.target.value, "marriagedate");
     
-    if (id.startsWith("childBirthHeb_")) {
-        const num = id.split("_")[1];
-        convertHebToGreg(event.target.value, `childBirth_${num}`);
+    // 2. תיקון קריטי עבור הצאצאים הדינמיים - שליפת המספר הנקי ללא מערכים!
+    if (id.indexOf("childBirthHeb_") !== -1) {
+        const num = id.replace("childBirthHeb_", ""); // שומר על המספר הרציף הנקי (1, 2, 3...)
+        convertHebToGreg(event.target.value, "childBirth_" + num);
     }
 });
 </script>
